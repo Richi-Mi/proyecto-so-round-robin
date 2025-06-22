@@ -12,11 +12,12 @@ int I = 0;
 SharedMemory *memory = NULL;
 
 void cod_del_proceso( int id, int t ) {
-    addMyPID(memory, getpid());
+    sendMyPID(memory, getpid());
     int i;
     for( i = 0; i < 5; i++ ) {
         printf("\n Proceso %d i= %d I = %d\n", id, i, I );
         I++;
+        sleep(1);
     }
     exit(t);
 }
@@ -28,7 +29,6 @@ int main() {
     int p, edo;
 
     memory = init();
-    addMyPID(memory, getpid());
     
     for( p = 0; p < N_PROCESOS; p++ ) {
         pid = fork();
@@ -47,6 +47,8 @@ int main() {
     for( p = 0; p < N_PROCESOS; p++ ) {
         pid = wait( &edo );
         printf("\nTermino el proceso %d con edo %x", pid, edo >> 8 );
+        finish( memory );
+
     }
 
     exit(0);

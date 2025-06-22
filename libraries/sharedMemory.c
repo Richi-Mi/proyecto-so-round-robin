@@ -42,5 +42,8 @@ void sendMyPID( SharedMemory *memory, pid_t my_pid ) {
     pause();
 }
 void finish( SharedMemory *memory ) {
+    sem_wait( &sem_mem );
+    memory -> myPID = getpid();
     kill( memory->planificador, SIGUSR2 );
+    sem_post( &sem_mem );
 }

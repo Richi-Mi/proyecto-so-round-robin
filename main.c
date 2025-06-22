@@ -30,9 +30,8 @@ void onEnQueueProcess()
     enQueue(myQueue, pidAct);
     showElements(myQueue);
 }
-void onFinishProcess()
-{
-    terminado = true;
+void onFinishProcess() {
+    terminado  = true;
 }
 
 void onTestFinish()
@@ -57,7 +56,7 @@ int main(int a, char *argv[])
     signal(SIGINT, &onTestFinish);
 
     memory = init();
-    memory->planificador = getpid();
+    memory -> planificador = getpid();
 
     myQueue = initQueue();
 
@@ -77,6 +76,7 @@ int main(int a, char *argv[])
             pid_t pidDq = deQueue(myQueue);
             printf(" * Proceso %d des-encolado \n", pidDq);
             showElements(myQueue);
+
             currentPID = pidDq;
             startProcess(pidDq);
 
@@ -86,7 +86,6 @@ int main(int a, char *argv[])
                 printf(" * Proceso %d re-encolado \n", currentPID);
                 stopProcess(currentPID);
                 enQueue(myQueue, currentPID);
-
                 showElements(myQueue);
             }
             else {
