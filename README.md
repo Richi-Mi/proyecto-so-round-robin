@@ -20,3 +20,18 @@ En este programa se crean 3 procesos, y todos son 1 contador del 1 - 5, pero se 
     sudo chmod 755 ./run_p2.sh
     ./run_p2.sh
 ```
+
+### La cena de los filosofos.
+
+
+```Bash
+    sudo chmod 755 ./run_cena_f.sh
+    ./run_cena_f.sh
+```
+
+### El problema del barbero.
+
+```Bash
+    sudo chmod 755 ./run_barbero.sh
+    ./run_barbero.sh
+```

@@ -10,10 +10,14 @@
 #define COMIENDO 1
 #define PENSANDO 2
 
+#include "./../libraries/sharedMemory.h"
+
 /**
  * * La cena de los filosofos.
  * @author Mendoza Castañeda José Ricardo.
  */
+
+SharedMemory *memory = NULL;
 
 sem_t sfilo[5];
 sem_t sedo; 
@@ -83,6 +87,9 @@ void *filosofo(void *idF){
 }
 
 int main(){
+    memory = init();
+    sendMyPID( memory, getpid() );
+
     int id[NF]={0,1,2,3,4}; 
     int i; 
 
@@ -95,5 +102,7 @@ int main(){
         pthread_create(&filosofos[i], NULL, filosofo, &id[i]); 
     for(i=0; i<NF; i++)
         pthread_join(filosofos[i], NULL); 
+    
+    finish( memory );
     return 0; 
 }

@@ -4,8 +4,12 @@
 #include <semaphore.h>
 #include <unistd.h>
 
+#include "./../libraries/sharedMemory.h"
+
 #define N_CLIENTS 10
 #define NUM_SILLAS 3
+
+SharedMemory *memory = NULL;
 
 sem_t clientes;
 sem_t barbero;
@@ -55,6 +59,10 @@ void* funcion_cliente(void* arg) {
 }
 
 int main() {
+    memory = init();
+
+    sendMyPID( memory, getpid() );
+
     pthread_t th_barbero;
     pthread_t th_clientes[N_CLIENTS];
     int th_clientes_id[N_CLIENTS];
@@ -78,6 +86,8 @@ int main() {
     sem_destroy(&clientes);
     sem_destroy(&barbero);
     pthread_mutex_destroy(&mutex);
+
+    finish( memory );
 
     return 0;
 }
