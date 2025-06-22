@@ -13,9 +13,10 @@ SharedMemory *memory = NULL;
 
 void cod_del_proceso( int id, int t ) {
     sendMyPID( memory, getpid() );
-    
-    sleep(2); // Simulación de un proceso.
 
+    sleep( 5 ); // Simulación de un proceso.
+    
+    finish( memory );
     exit(t);
 }
 
@@ -25,9 +26,7 @@ int main() {
     pid_t pid;
     int p, edo;
 
-    memory = init();
-    // sendMyPID(memory, getpid());
-    
+    memory = init();    
     for( p = 0; p < N_PROCESOS; p++ ) {
         pid = fork();
         if( pid == -1 ) {

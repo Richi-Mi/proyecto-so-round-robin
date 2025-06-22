@@ -8,65 +8,94 @@
 #include "./libraries/queue.h"
 
 SharedMemory *memory = NULL;
-Queue *myQueue       = NULL;
-int quantum          = 0;
-pid_t currentPID     = 0;
+Queue *myQueue = NULL;
+int quantum = 0;
+pid_t currentPID = 0;
+bool terminado = false;
 
-void stopProcess( pid_t pid ) {
-    kill( pid, SIGSTOP );
+void stopProcess(pid_t pid)
+{
+    kill(pid, SIGSTOP);
 }
-void startProcess( pid_t pid ) {
-    kill( pid, SIGCONT );
+void startProcess(pid_t pid)
+{
+    kill(pid, SIGCONT);
 }
 
-void onEnQueueProcess() {
+void onEnQueueProcess()
+{
     // Add the procces PID to the queue
     pid_t pidAct = memory->myPID;
+    printf(" * Proceso %d encolado \n", pidAct);
     enQueue(myQueue, pidAct);
-    showElements( myQueue );
+    showElements(myQueue);
+}
+void onFinishProcess()
+{
+    terminado = true;
 }
 
-void onTestFinish() {
+void onTestFinish()
+{
     printf(" * Planificador terminado con exito. \n");
     destroy();
     exit(0);
 }
 
-int main(int a, char *argv[]) {
-    if( !isnumber(argv[1][0]) ) {
+int main(int a, char *argv[])
+{
+    if (!isnumber(argv[1][0]))
+    {
         perror("Ingrese un quantum valido");
         exit(1);
     }
-    quantum = atoi( argv[1] );
+    quantum = atoi(argv[1]);
 
-    signal(SIGUSR1, &onEnQueueProcess );
-    signal(SIGINT,  &onTestFinish );
+    signal(SIGUSR1, &onEnQueueProcess);
+    signal(SIGUSR2, &onFinishProcess);
+
+    signal(SIGINT, &onTestFinish);
 
     memory = init();
-    memory -> planificador = getpid();
+    memory->planificador = getpid();
 
     myQueue = initQueue();
-    
+
     printf(" * ---------------------------- * \n");
     printf(" * -------- Round Robin ------- * \n");
     printf(" * ---------------------------- * \n\n");
 
     printf(" * Quantum de %d segundos. \n", quantum);
-    printf(" * My PID es: %d \n", getpid() );
+    printf(" * My PID es: %d \n", getpid());
 
     do {
-        if( isEmpty(myQueue) ) {
+        if (isEmpty(myQueue)) {
             printf("Esperando procesos... \n");
             pause();
         }
         else {
             pid_t pidDq = deQueue(myQueue);
-            showElements( myQueue );
-            
-            startProcess( pidDq );
+            printf(" * Proceso %d des-encolado \n", pidDq);
+            showElements(myQueue);
+            currentPID = pidDq;
+            startProcess(pidDq);
+
+            sleep(quantum);
+
+            if (currentPID == pidDq && terminado == false) {
+                printf(" * Proceso %d re-encolado \n", currentPID);
+                stopProcess(currentPID);
+                enQueue(myQueue, currentPID);
+
+                showElements(myQueue);
+            }
+            else {
+                printf(" * Proceso %d terminado \n", currentPID);
+                terminado = false;
+            }
         }
 
-    } while(1);
+    } while (1);
 
     return 0;
 }

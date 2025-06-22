@@ -59,8 +59,6 @@ pid_t deQueue( Queue *myQueue ) {
 void showElements( Queue *myQueue ) {
     Nodo *aux = myQueue -> inicio;
     if( aux != NULL ) {
-        printf(" * \n" );
-
         if ( aux -> siguiente == myQueue -> inicio ) {
             printf(" | %d |\n", myQueue -> inicio -> value );
         }

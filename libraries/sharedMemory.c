@@ -10,6 +10,7 @@
 
 int shmg;
 key_t sm_key;
+sem_t sem_mem;
 
 SharedMemory* init() {
     sm_key = ftok("/bin/ls", 10);
@@ -20,6 +21,7 @@ SharedMemory* init() {
     
     // We entry for read and write
     SharedMemory *memory = shmat( shmg, 0, 0 );
+    sem_init( &sem_mem, 0, 1 );
     return memory;
 }
 void destroy() {
@@ -30,9 +32,15 @@ void onStartProcess() {
 }
 void sendMyPID( SharedMemory *memory, pid_t my_pid ) {
     signal( SIGCONT, &onStartProcess );
+
+    sem_wait( &sem_mem );
     memory -> myPID = my_pid;
     kill( memory->planificador, SIGUSR1 );
+    sem_post( &sem_mem );
     // We Stop our process.
     printf("\n > PID encolado. %d \n", my_pid );
     pause();
+}
+void finish( SharedMemory *memory ) {
+    kill( memory->planificador, SIGUSR2 );
 }

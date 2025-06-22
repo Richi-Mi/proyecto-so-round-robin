@@ -12,5 +12,6 @@ typedef struct SharedMemory {
 SharedMemory* init();
 void destroy();
 void sendMyPID( SharedMemory *memory, pid_t my_pid );
+void finish( SharedMemory *memory );
 
 #endif
