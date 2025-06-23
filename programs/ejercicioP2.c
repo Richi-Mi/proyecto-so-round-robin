@@ -48,7 +48,6 @@ int main() {
         pid = wait( &edo );
         printf("\nTermino el proceso %d con edo %x", pid, edo >> 8 );
         finish( memory );
-
     }
 
     exit(0);

@@ -28,7 +28,7 @@ void destroy() {
     shmctl(shmg, IPC_RMID, 0);
 }
 void onStartProcess() {
-    printf("\n > PID desencolado. %d \n", getpid() );
+    printf(".\n");
 }
 void sendMyPID( SharedMemory *memory, pid_t my_pid ) {
     signal( SIGCONT, &onStartProcess );
