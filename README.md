@@ -35,3 +35,12 @@ En este programa se crean 3 procesos, y todos son 1 contador del 1 - 5, pero se 
     sudo chmod 755 ./run_barbero.sh
     ./run_barbero.sh
 ```
+
+### Extra.
+
+Un proceso que cree un proceso hijo, el padre deberá imprimir su pid y un contador que empiece en 1 y vaya incrementando hasta que llegue a 30 con un tiempo de 2 segundos entecada impresión. El hijo igual deberá imprimir su pid y un contador que empiece en 1 y vaya incrementando hasta que llegue a 50 con un tiempo de 1 segundos entre cada impresión.
+
+```Bash
+    sudo chmod 755 ./run_extra.sh
+    ./run_barbero.sh
+```
